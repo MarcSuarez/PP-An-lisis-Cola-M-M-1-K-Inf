@@ -1,60 +1,86 @@
-# 📊 Análisis de Sistema de Colas M/M/1/K/Inf
+# Análisis de Sistema de Colas M/M/1/K/Inf
 
-> **Análisis completo de un sistema de colas con 1 servidor, capacidad limitada K y población infinita**
+## Descripción
 
-## 🎯 Objetivo
+Este proyecto implementa el análisis completo de un sistema de colas M/M/1/K/Inf (Markov/Markov/1 servidor/capacidad K/población infinita) para calcular las métricas principales:
 
-Comprobar los resultados teóricos de un sistema de colas M/M/1/K/Inf usando simulación computacional para encontrar:
 - **NS**: Número promedio de usuarios en el sistema
-- **TS**: Tiempo promedio en el sistema
+- **TS**: Tiempo promedio en el sistema  
 - **Nw**: Número promedio de usuarios en cola
 - **Tw**: Tiempo promedio en cola
 
-## 🚀 Uso Rápido
+## Estructura del Proyecto
 
-### 1. Ejecutar análisis básico
+```
+src/
+├── analisis_colas.py    # Modelo matemático + simulación simple
+└── mesa_mm1k.py         # Verificación con Mesa (headless)
+archivos_netlogo/
+└── Discrete_Event_Simulation__Queues_and_Servers.nlogo
+```
+
+## Requisitos
+
+- Python 3.6+
+- Mesa (solo para verificación con Mesa)
+
+## Instalación
+
+```bash
+# Para verificación con Mesa (opcional)
+pip install -U "mesa[rec]"
+```
+
+## Uso
+
+### 1. Análisis Matemático + Simulación Simple
+
 ```bash
 cd src/
 python analisis_colas.py
 ```
 
-### 2. Ver ejemplos
+Este comando ejecuta:
+- Cálculo de fórmulas teóricas
+- Simulación de eventos discretos
+- Comparación teórico vs simulado
+
+### 2. Verificación con Mesa
+
 ```bash
-cd examples/
-python ejemplo_basico.py
+cd src/
+python -c "from mesa_mm1k import run_mesa_mm1k; print(run_mesa_mm1k(0.9,1.4,5,50000,5)[0])"
 ```
 
-## 📁 Estructura del Proyecto
+## Configuración de Parámetros
 
-```
-📁 src/                    # Código fuente
-│   └── 📄 analisis_colas.py   # ⭐ ARCHIVO PRINCIPAL
-📁 examples/               # Ejemplos de uso
-│   ├── 📄 ejemplo_basico.py
-│   └── 📄 ejemplo_avanzado.py
-📁 docs/                   # Documentación
-│   ├── 📄 INSTRUCCIONES.md
-│   └── 📄 ARQUITECTURA.md
-```
-
-## ⚙️ Configuración
-
-Edita `src/analisis_colas.py`:
+Edita las variables en `src/analisis_colas.py`:
 
 ```python
-# ========================================
-# CONFIGURACIÓN DE PARÁMETROS
-# ========================================
 LAMBDA = 0.9    # λ (tasa de llegada)
-MU = 1.4        # μ (tasa de servicio)
+MU = 1.4        # μ (tasa de servicio)  
 K = 5           # K (capacidad del sistema)
 MAX_TIME = 50000  # Tiempo de simulación
 NUM_RUNS = 5    # Número de ejecuciones
 ```
 
-## 📊 Ejemplo de Resultados
+## Ejemplo de Salida
 
 ```
+RESULTADOS TEÓRICOS - SISTEMA M/M/1/K/Inf
+============================================================
+Parámetros:
+  λ (tasa de llegada): 0.9000
+  μ (tasa de servicio): 1.4000
+  K (capacidad): 5
+
+Resultados:
+  NS (usuarios en sistema): 1.3444
+  TS (tiempo en sistema): 1.5595
+  Nw (usuarios en cola): 0.7286
+  Tw (tiempo en cola): 0.8452
+============================================================
+
 COMPARACIÓN TEÓRICA vs SIMULADA
 ================================================================================
 Métrica         Teórico      Simulado     Diferencia   Error %   
@@ -65,39 +91,13 @@ Nw              0.7286       0.7334       0.0048       0.66
 Tw              0.8452       0.8473       0.0021       0.25      
 ```
 
-## 🎓 Sistema M/M/1/K/Inf
+## Archivos
 
-- **M**: Llegadas siguiendo proceso de Poisson
-- **M**: Tiempos de servicio exponenciales
-- **1**: Un servidor
-- **K**: Capacidad limitada del sistema
-- **Inf**: Población infinita
+- **`analisis_colas.py`**: Contiene las fórmulas teóricas del sistema M/M/1/K/Inf y una simulación de eventos discretos para verificar los resultados.
+- **`mesa_mm1k.py`**: Implementación alternativa usando Mesa para verificación adicional.
+- **`archivos_netlogo/`**: Modelo NetLogo original de referencia.
 
-## ✅ Características
+## Referencias
 
-- ✅ **Sin dependencias externas** (solo Python estándar)
-- ✅ **Fácil de configurar** con comentarios claros
-- ✅ **Resultados precisos** (errores < 1% típicamente)
-- ✅ **Comparación directa** teórico vs simulado
-- ✅ **Basado en modelo NetLogo** existente
-
-## 📖 Documentación
-
-- [📋 Instrucciones detalladas](docs/INSTRUCCIONES.md)
-- [🏗️ Arquitectura del proyecto](docs/ARQUITECTURA.md)
-
-## 🔧 Requisitos
-
-- Python 3.6+
-- No se requieren librerías externas
-
-## 📝 Uso para Tarea Académica
-
-1. **Configura los parámetros** en `src/analisis_colas.py`
-2. **Ejecuta el análisis**: `python src/analisis_colas.py`
-3. **Interpreta los resultados** usando la documentación
-4. **Compara** con los valores del modelo NetLogo original
-
----
-
-**Desarrollado para análisis académico de sistemas de colas M/M/1/K/Inf**
+- Mesa documentation: https://mesa.readthedocs.io/latest/
+- NetLogo model: Discrete Event Simulation - Queues and Servers
