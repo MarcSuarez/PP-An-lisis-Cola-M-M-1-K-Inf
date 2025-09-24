@@ -87,11 +87,7 @@ def mm1k_theoretical_values(lambda_rate, mu_rate, K):
         'NS': NS,
         'TS': TS,
         'Nw': Nw,
-        'Tw': Tw,
-        'rho': rho,
-        'p0': p0,
-        'lambda_eff': lambda_eff,
-        'server_busy_prob': server_busy_prob
+        'Tw': Tw
     }
 
 def print_theoretical_results(lambda_rate, mu_rate, K):
@@ -105,18 +101,12 @@ def print_theoretical_results(lambda_rate, mu_rate, K):
     print(f"  λ (tasa de llegada): {lambda_rate:.4f}")
     print(f"  μ (tasa de servicio): {mu_rate:.4f}")
     print(f"  K (capacidad): {K}")
-    print(f"  ρ (utilización): {results['rho']:.4f}")
     print()
     print(f"Resultados:")
     print(f"  NS (usuarios en sistema): {results['NS']:.4f}")
     print(f"  TS (tiempo en sistema): {results['TS']:.4f}")
     print(f"  Nw (usuarios en cola): {results['Nw']:.4f}")
     print(f"  Tw (tiempo en cola): {results['Tw']:.4f}")
-    print()
-    print(f"Información adicional:")
-    print(f"  Probabilidad sistema vacío (p0): {results['p0']:.4f}")
-    print(f"  Tasa efectiva de llegada: {results['lambda_eff']:.4f}")
-    print(f"  Probabilidad servidor ocupado: {results['server_busy_prob']:.4f}")
     print("=" * 60)
     
     return results
@@ -243,15 +233,11 @@ class SimpleQueueSimulation:
         """Calcula y retorna las estadísticas de la simulación"""
         if self.total_departures == 0:
             return {
-                'NS': 0, 'TS': 0, 'Nw': 0, 'Tw': 0,
-                'lambda_eff': 0, 'blocking_prob': 0
+                'NS': 0, 'TS': 0, 'Nw': 0, 'Tw': 0
             }
             
         # Tasa efectiva de llegada
         lambda_eff = self.total_departures / self.current_time
-        
-        # Probabilidad de bloqueo
-        blocking_prob = self.total_blocked / self.total_arrivals if self.total_arrivals > 0 else 0
         
         # Tiempo promedio en el sistema
         TS = self.total_system_time / self.total_departures
@@ -269,13 +255,7 @@ class SimpleQueueSimulation:
             'NS': NS,
             'TS': TS,
             'Nw': Nw,
-            'Tw': Tw,
-            'lambda_eff': lambda_eff,
-            'blocking_prob': blocking_prob,
-            'total_arrivals': self.total_arrivals,
-            'total_departures': self.total_departures,
-            'total_blocked': self.total_blocked,
-            'simulation_time': self.current_time
+            'Tw': Tw
         }
 
 # ========================================
@@ -315,7 +295,7 @@ def run_complete_analysis(lambda_rate, mu_rate, K, max_time, num_runs):
     
     # 3. Calcular promedios
     avg_results = {}
-    for key in ['NS', 'TS', 'Nw', 'Tw', 'lambda_eff', 'blocking_prob']:
+    for key in ['NS', 'TS', 'Nw', 'Tw']:
         avg_results[key] = sum(r[key] for r in results) / len(results)
     
     # 4. Mostrar comparación
@@ -334,14 +314,6 @@ def run_complete_analysis(lambda_rate, mu_rate, K, max_time, num_runs):
         error_pct = abs(difference / theoretical_val * 100) if theoretical_val != 0 else 0
         
         print(f"{metric:<15} {theoretical_val:<12.4f} {simulated_val:<12.4f} {difference:<12.4f} {error_pct:<10.2f}")
-    
-    print("\n" + "=" * 80)
-    print("ESTADÍSTICAS ADICIONALES")
-    print("=" * 80)
-    print(f"Tasa efectiva de llegada (teórica): {theoretical['lambda_eff']:.4f}")
-    print(f"Tasa efectiva de llegada (simulada): {avg_results['lambda_eff']:.4f}")
-    print(f"Probabilidad de bloqueo (simulada): {avg_results['blocking_prob']:.4f}")
-    print(f"Utilización teórica (ρ): {theoretical['rho']:.4f}")
     
     print("\n" + "=" * 80)
     print("ANÁLISIS COMPLETADO")
